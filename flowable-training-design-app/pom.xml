@@ -12,11 +12,11 @@
     </parent>
 
     <dependencies>
-        <!-- <dependency>
+        <dependency>
             <groupId>com.acme.training.flowabletraining</groupId>
             <artifactId>form-components-palette</artifactId>
-            <version>${project.version}</version>
-        </dependency> -->
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.flowable.design</groupId>
             <artifactId>flowable-spring-boot-starter-design</artifactId>

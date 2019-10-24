@@ -28,6 +28,7 @@
     <modules>
         <module>flowable-training-rest-app</module>
         <module>flowable-training-design-app</module>
+		<module>form-components-palette</module>
     </modules>
 
 </project>
