@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -56,9 +56,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.197</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.8</version>
         </dependency>
 
         <!-- LOGGING -->
@@ -66,10 +66,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        <!-- <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency> -->
 
     </dependencies>
 
@@ -93,5 +89,12 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>AsposeRepo</id>
+            <name>Aspose Repository</name>
+            <url>https://artifact.aspose.com/repo/</url>
+        </repository>
+    </repositories>
 
 </project>

@@ -11,7 +11,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>flowable-training-rest-app</name>
 	<description>Flowable Training REST Application</description>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -33,9 +33,9 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>7.4.1.jre8</version>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -47,10 +47,15 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.flowable</groupId>
 			<artifactId>flowable-spring-boot-starter-rest</artifactId>
 			<version>${org.flowable.version}</version>
+		</dependency> -->
+		<dependency>
+			<groupId>com.flowable.core</groupId>
+			<artifactId>flowable-spring-boot-starter-core-rest</artifactId>
+			<version>${com.flowable.version}</version>
 		</dependency>
 	</dependencies>
 
