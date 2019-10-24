@@ -21,7 +21,7 @@ The default credentials are:
 - user : admin
 - password: test
 
-This docker-compose file contains a Postgresql instance for the Flowable applications and a SQL Server instance for the Spring Boot application.
+This docker-compose file contains a Postgresql instance for the Flowable applications but also a mssql server database for the Flowable REST application.
 
 The first time you run the docker-compose, you must connect to mssql anc create the flowable database:
 
@@ -40,6 +40,7 @@ The default mssql credentials can be found in the application.properties file.
   - Regular user -> user:test
   - Actuator user -> user-actuator:test
   - Flowable REST API user -> user-rest:test
+- Database -> MSSQL
 
 ## Flowable Training Custom Design application
 
