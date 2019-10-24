@@ -1,0 +1,132 @@
+version: '3.4'
+services:
+  flowable-work:
+    image: repo.edorasware.com/flowable/flowable-work:3.4.0
+    networks:
+      - internal
+    environment:
+      - SERVER_SERVLET_SESSION_TIMEOUT=1h
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flowable
+      - SPRING_DATASOURCE_USERNAME=flowable
+      - SPRING_DATASOURCE_PASSWORD=flowable
+      - FLOWABLE_INDEXING_ELASTICSEARCHADDRESSES=http://elasticsearch:9200
+      - FLOWABLE_FORM_SERVLET_LOAD-ON-STARTUP=1
+      - FLOWABLE_ACTION_SERVLET_LOAD-ON-STARTUP=1
+      - FLOWABLE_PLATFORM_IDM_SERVLET_LOAD-ON-STARTUP=1
+      - FLOWABLE_INDEXING_SERVLET_LOAD-ON-STARTUP=1
+      - LOGGING_FILE=flowable-work.log
+      - FLOWABLE_MAIL_SERVER_HOST=mailhog
+      - FLOWABLE_MAIL_SERVER_PASSWORD=
+      - FLOWABLE_MAIL_SERVER_PORT=1025
+      - FLOWABLE_MAIL_SERVER_USE-SSL=false
+      - FLOWABLE_MAIL_SERVER_USE-TLS=true
+      - FLOWABLE_MAIL_SERVER_USERNAME=
+      - FLOWABLE_MAIL_SERVER_DEFAULT-FROM=example@acme.com
+    depends_on:
+      - elasticsearch
+      - postgres
+    ports:
+      - 8080:8080
+    entrypoint: ["/wait-for-it.sh", "elasticsearch:9200", "-t", "0", "--", "/opt/tomcat/bin/catalina.sh", "run"]
+
+  # flowable-design:
+  #   image: repo.edorasware.com/flowable/flowable-design:3.4.0
+  #   networks:
+  #     - internal
+  #   environment:
+  #     - SERVER_SERVLET_SESSION_TIMEOUT=1h
+  #     - SERVER_SERVLET_CONTEXT-PATH=/
+  #     - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+  #     - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flowable
+  #     - SPRING_DATASOURCE_USERNAME=flowable
+  #     - SPRING_DATASOURCE_PASSWORD=flowable
+  #     - LOGGING_FILE=flowable-design.log
+  #     - FLOWABLE_MODELER_APP_DEPLOYMENT-API-URL=http://flowable-work:8080/app-api
+  #     - FLOWABLE_COMMON_APP_IDM-URL=http://flowable-work:8080
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - 8888:8080
+  #   entrypoint: ["/wait-for-it.sh", "postgres:5432", "-t", "0", "--", "/opt/tomcat/bin/catalina.sh", "run"]
+
+  flowable-control:
+    image: repo.edorasware.com/flowable/flowable-control:3.4.0
+    networks:
+      - internal
+    environment:
+      - SERVER_SERVLET_SESSION_TIMEOUT=1h
+      - SERVER_SERVLET_CONTEXT-PATH=/
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flowable
+      - SPRING_DATASOURCE_USERNAME=flowable
+      - SPRING_DATASOURCE_PASSWORD=flowable
+      - LOGGING_FILE=flowable-control.log
+      - FLOWABLE_COMMON_APP_IDM-URL=http://flowable-work:8080
+      - FLOWABLE_CONTROL_APP_CLUSTER-CONFIG_NAME=Default Cluster
+      - FLOWABLE_CONTROL_APP_CLUSTER-CONFIG_DESCRIPTION=Default Flowable Cluster
+      - FLOWABLE_CONTROL_APP_CLUSTER-CONFIG_SERVER-ADDRESS=http://flowable-work
+      - FLOWABLE_CONTROL_APP_CLUSTER-CONFIG_PORT=8080
+      - FLOWABLE_CONTROL_APP_CLUSTER-CONFIG_CONTEXT-ROOT=/
+    depends_on:
+      - postgres
+    ports:
+      - 9988:8080
+    entrypoint: ["/wait-for-it.sh", "flowable-work:8080", "-t", "0", "--", "/opt/tomcat/bin/catalina.sh", "run"]
+
+  postgres:
+    image: postgres:10
+    networks:
+      - internal
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=flowable
+      - POSTGRES_USER=flowable
+      - POSTGRES_PASSWORD=flowable
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.7.1
+    environment:
+      - discovery.type=single-node
+      - node.name=flowable-node
+      - cluster.name=flowable-cluster
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - internal
+    ports:
+      - 9300:9300
+      - 9200:9200
+    volumes:
+      - elastic:/usr/share/elasticsearch/data
+
+  sql-server-db:
+    image: microsoft/mssql-server-linux:2017-latest
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: "Sup3rStr0ngPassw0rd"
+      ACCEPT_EULA: "Y"
+    networks: 
+      - internal
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks: 
+      - internal
+
+networks:
+  internal:
+
+volumes:
+  postgres:
+  elastic:
